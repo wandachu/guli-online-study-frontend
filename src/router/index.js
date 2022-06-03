@@ -42,7 +42,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/teacher/table', // alias of /teacher
     name: 'Teacher',
-    meta: { title: 'Teacher', icon: 'example' }, // shown on page
+    meta: { title: 'Teacher Management', icon: 'example' }, // shown on page
     children: [
       {
         path: 'table',
@@ -62,6 +62,28 @@ export const constantRouterMap = [
         component: () => import('@/views/edu/teacher/save'),
         meta: { title: 'Edit Teacher', icon: 'tree' },
         hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/subject',
+    component: Layout,
+    redirect: '/subject/list', // alias of /teacher
+    name: 'Subject Category',
+    meta: { title: 'Subject Category', icon: 'example' }, // shown on page
+    children: [
+      {
+        path: 'list',
+        name: 'Subject List',
+        component: () => import('@/views/edu/subject/list'),
+        meta: { title: 'Subject List', icon: 'table' }
+      },
+      {
+        path: 'save',
+        name: 'Add Subject',
+        component: () => import('@/views/edu/subject/save'),
+        meta: { title: 'Add Subject', icon: 'tree' }
       }
     ]
   },

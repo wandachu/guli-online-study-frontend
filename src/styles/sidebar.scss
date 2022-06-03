@@ -3,13 +3,13 @@
   .main-container {
     min-height: 100%;
     transition: margin-left .28s;
-    margin-left: 180px;
+    margin-left: 230px; // must align with below
     position: relative;
   }
   // 侧边栏
   .sidebar-container {
     transition: width 0.28s;
-    width: 180px !important;
+    width: 230px !important; // must align with above
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -26,7 +26,7 @@
       right: 0px;
     }
     .scrollbar-wrapper {
-      overflow-x: hidden!important;
+      overflow-x: hidden !important;
       .el-scrollbar__view {
         height: 100%;
       }

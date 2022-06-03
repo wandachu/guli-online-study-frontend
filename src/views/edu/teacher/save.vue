@@ -21,7 +21,32 @@
                 <el-input v-model="teacher.intro" :rows="10" type="textarea"/>
             </el-form-item>
 
-        <!-- 讲师头像：TODO -->
+            <!-- Teacher Avatar -->
+            <el-form-item label="Avatar">
+                <!-- 头衔缩略图 -->
+                <pan-thumb :image="teacher.avatar"/>
+                <!-- 文件上传按钮 -->
+                <el-button type="primary" icon="el-icon-upload" @click="imagecropperShow=true">Change Avatar
+                </el-button>
+
+                <!--
+                v-show：是否显示上传组件
+                :key：类似于id，如果一个页面多个图片上传控件，可以做区分
+                :url：后台上传的url地址
+                @close：关闭上传组件
+                @crop-upload-success：上传成功后的回调 
+                    <input type="file" name="file"/> this "file" must align with backend MultipartImage's variable name
+                -->
+                <image-cropper
+                                v-show="imagecropperShow"
+                                :width="300"
+                                :height="300"
+                                :key="imagecropperKey"
+                                :url="BASE_API+'/eduoss/fileoss'"
+                                field="file"
+                                @close="close"
+                                @crop-upload-success="cropSuccess"/>
+            </el-form-item>
 
             <el-form-item>
                 <el-button :disabled="saveBtnDisabled" type="primary" @click="saveOrUpdate">Save</el-button>
@@ -30,8 +55,13 @@
   </div>
 </template>
 <script>
+
 import teacherApi from '@/api/edu/teacher'
+import ImageCropper from '@/components/ImageCropper'
+import PanThumb from '@/components/PanThumb'
+
 export default {
+    components: { ImageCropper, PanThumb },
     data() {
         return {
             teacher: { // can omit
@@ -42,6 +72,9 @@ export default {
             intro: '',
             avatar: ''
             },
+            imagecropperShow:false, // default not show the upload pop-up
+            imagecropperKey: 0, // key value
+            BASE_API: process.env.BASE_API,
             saveBtnDisabled:false  // 保存按钮是否禁用,
         }
     },
@@ -54,12 +87,22 @@ export default {
         }
     },
     methods:{
+        close() { // close upload
+            this.imagecropperShow=false
+            this.imagecropperKey=this.imagecropperKey + 1
+        },
+        cropSuccess(data) {
+            this.teacher.avatar = data.url
+            this.close()
+        },
         init() {
             if(this.$route.params && this.$route.params.id) { // has id, update
                 const id = this.$route.params.id
                 this.getInfo(id)
             } else { // no id, save
-                this.teacher = {}
+                this.teacher = { // has a default avatar
+                    avatar: 'https://guliedu-chu.oss-us-west-1.aliyuncs.com/2022/06/02/805d4532cd4f498dbedf716818acadb0file.png'
+                }
             }
         },
         getInfo(id) {

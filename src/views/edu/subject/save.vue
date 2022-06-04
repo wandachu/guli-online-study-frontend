@@ -18,7 +18,7 @@
           :on-error="fileUploadError"
           :disabled="importBtnDisabled"
           :limit="1"
-          :action="BASE_API + '/eduservice/subject/addsubject'"
+          :action="BASE_API + '/eduservice/subject/addSubject'"
           name="file"
           accept=".xls, .xlsx">
           <el-button slot="trigger" size="small" type="primary">Select File</el-button>
@@ -27,14 +27,13 @@
             style="margin-left: 10px;"
             size="small"
             type="success"
-            @click="submitUpload">Upload</el-button>
+            @click="submitUpload">Import</el-button>
         </el-upload>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
-// import { defineComponent } from '@vue/composition-api'
 
 export default {
   data() {
@@ -58,8 +57,9 @@ export default {
       this.loading = false
       this.$message({
         type: 'success',
-        message: 'Successfully importing subjects!'
+        message: 'Successfully imported!'
       })
+      this.$router.push({path:'/subject/list'})
     },
     fileUploadError() {
       this.loading = false

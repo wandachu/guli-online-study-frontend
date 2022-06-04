@@ -69,7 +69,7 @@ export const constantRouterMap = [
   {
     path: '/subject',
     component: Layout,
-    redirect: '/subject/list', // alias of /teacher
+    redirect: '/subject/list', // alias
     name: 'Subject Category',
     meta: { title: 'Subject Category', icon: 'example' }, // shown on page
     children: [
@@ -84,6 +84,49 @@ export const constantRouterMap = [
         name: 'Add Subject',
         component: () => import('@/views/edu/subject/save'),
         meta: { title: 'Add Subject', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/course',
+    component: Layout,
+    redirect: '/course/list',
+    name: 'Course Management',
+    meta: { title: 'Course Management', icon: 'example' }, // shown on page
+    children: [
+      {
+        path: 'list',
+        name: 'Course List',
+        component: () => import('@/views/edu/course/list'),
+        meta: { title: 'Course List', icon: 'table' }
+      },
+      {
+        path: 'info',
+        name: 'Add Course',
+        component: () => import('@/views/edu/course/info'),
+        meta: { title: 'Add Course', icon: 'tree' }
+      },
+      {
+        path: 'info/:id',
+        name: 'CourseInfoEdit',
+        component: () => import('@/views/edu/course/info'),
+        meta: { title: 'Edit Course', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'chapter/:id',
+        name: 'CourseChapterEdit',
+        component: () => import('@/views/edu/course/chapter'),
+        meta: { title: 'Edit Course Chapter', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'publish/:id',
+        name: 'CoursePublishEdit',
+        component: () => import('@/views/edu/course/publish'),
+        meta: { title: 'Publish Course', noCache: true },
+        hidden: true
       }
     ]
   },

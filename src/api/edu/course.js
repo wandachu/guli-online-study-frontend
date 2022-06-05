@@ -5,13 +5,28 @@ export default {
             url: '/eduservice/course/addCourseInfo',
             method: 'post',
             data: courseInfo
-          })
+            })
     },
 
     getListTeacher() {
         return request({
             url: '/eduservice/teacher/findAll',
             method: 'get'
-          })
+            })
+    },
+
+    getCourseInfoId(id) {
+        return request({
+            url: '/eduservice/course/getCourseInfo/' + id,
+            method: 'get'
+            })
+    },
+
+    updateCourseInfo(courseInfo) {
+        return request({
+            url: '/eduservice/course/updateCourseInfo',
+            method: 'post',
+            data: courseInfo
+            })
     }
 }

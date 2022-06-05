@@ -56,7 +56,7 @@
         </el-form-item>
 
         <el-form-item label="Description">
-          <el-input v-model="courseInfo.description" placeholder=" "/>
+          <tinymce :height="300" v-model="courseInfo.description"/>
         </el-form-item>
 
         <!-- 课程封面 -->
@@ -84,8 +84,11 @@
 <script>
 import course from '@/api/edu/course'
 import subject from '@/api/edu/subject'
+import Tinymce from '@/components/Tinymce' // import it
 
 export default {
+  // declare Tinymce component
+  components: { Tinymce },
   data() {
     return {
       saveBtnDisabled: false,
@@ -99,6 +102,7 @@ export default {
           cover: '/static/01.jpg',
           price: 0
       },
+      courseId: '',
       BASE_API: process.env.BASE_API,
       teacherList: [],
       subjectOneList: [],
@@ -106,10 +110,50 @@ export default {
     };
   },
   created() {
-    this.getListTeacher() // initialize teacher list
-    this.getOneSubject() // initialize OneSubject
+    this.init()
+  },
+  watch: {  //监听
+    $route(to, from) { //路由变化方式，路由发生变化，方法就会执行
+      this.init()
+    }
   },
   methods: {
+    init() {
+      if (this.$route.params && this.$route.params.id) { // update
+      this.courseId = this.$route.params.id
+      this.getInfo() // will populate subjectOneList, subjectTwoList, teacherList
+    } else { // initial save
+      this.courseInfo = {
+          title: '',
+          subjectId: '', //二级分类id
+          subjectParentId:'', //一级分类id
+          teacherId: '',
+          lessonNum: 0,
+          description: '',
+          cover: '/static/01.jpg',
+          price: 0
+      }
+      this.getListTeacher() // initialize teacher list
+      this.getOneSubject() // initialize OneSubject
+    }
+    },
+    getInfo() {
+      course.getCourseInfoId(this.courseId)
+        .then(response => {
+          this.courseInfo = response.data.courseInfoVo
+          subject.getSubjectList() // Get all subjects
+            .then(response => {
+              this.subjectOneList = response.data.list // get all OneSubject
+              for (var i = 0; i < this.subjectOneList.length; i++) { // get matching TwoSubject
+                var oneSubject = this.subjectOneList[i]
+                if (this.courseInfo.subjectParentId === oneSubject.id) {
+                  this.subjectTwoList = oneSubject.children
+                }
+              }
+            })
+            this.getListTeacher()
+        })
+    },
     handleAvatarSuccess(res, file) {
       this.courseInfo.cover = res.data.url
     },
@@ -158,3 +202,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .tinymce-container {
+    line-height: 29px;
+  }
+</style>

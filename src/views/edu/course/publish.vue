@@ -6,34 +6,109 @@
       <el-step title="Create chapters"/>
       <el-step title="Publish"/>
     </el-steps>
-    
-    <el-form label-width="120px">
-      <el-form-item>
-        <el-button @click="previous">Previous</el-button>
-        <el-button :disabled="saveBtnDisabled" type="primary" @click="publish">Publish</el-button>
-      </el-form-item>
-    </el-form>
+
+    <div class="ccInfo">
+      <img :src="coursePublish.cover">
+      <div class="main">
+        <h2>{{ coursePublish.title }}</h2>
+        <p class="gray"><span>Total: {{ coursePublish.lessonNum }} lessons</span></p>
+        <p><span>Subject Category：{{ coursePublish.subjectLevelOne }} — {{ coursePublish.subjectLevelTwo }}</span></p>
+        <p>Teacher：{{ coursePublish.teacherName }}</p>
+        <h3 class="red">${{ coursePublish.price }}</h3>
+      </div>
+    </div>
+    <div>
+      <el-button @click="previous">Return to modify</el-button>
+      <el-button :disabled="saveBtnDisabled" type="primary" @click="publish">Publish</el-button>
+    </div>
   </div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        courseId: '', // courseId
-        saveBtnDisabled: false // 保存按钮是否禁用
-      }
-    },
-    created() {
+import course from '@/api/edu/course'
+export default {
+  data() {
+    return {
+      courseId: '', 
+      coursePublish: {},
+      saveBtnDisabled: false // 保存按钮是否禁用
+    }
+  },
+  created() {
+    if (this.$route.params && this.$route.params.id) {
       this.courseId = this.$route.params.id
+      this.getCoursePublishId()
+    }
+  },
+  methods: {
+    getCoursePublishId() {
+      course.getPublishCourseInfo(this.courseId)
+        .then(response => {
+          this.coursePublish = response.data.publishCourse
+        })
     },
-    methods: {
-      previous() {
-        this.$router.push({ path: '/course/chapter/' + this.courseId })
-      },
-      publish() {
-        console.log('publish')
-        this.$router.push({ path: '/course/list' })
-      }
+    previous() {
+      this.$router.push({ path: '/course/chapter/' + this.courseId })
+    },
+    publish() {
+      course.publishCourse(this.courseId)
+        .then(response => {
+          this.$message({
+            type: 'success',
+            message: 'Successfully published'
+          })
+        })
+      this.$router.push({ path: '/course/list' })
     }
   }
+}
 </script>
+<style scoped>
+.ccInfo {
+  background: #f5f5f5;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px dashed #DDD;
+  margin-bottom: 40px;
+  position: relative;
+}
+.ccInfo img {
+  background: #d6d6d6;
+  width: 500px;
+  height: 278px;
+  display: block;
+  float: left;
+  border: none;
+}
+.ccInfo .main {
+  margin-left: 520px;
+}
+.ccInfo .main h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  line-height: 1;
+  font-weight: normal;
+}
+.ccInfo .main p {
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  line-height: 24px;
+  max-height: 48px;
+  overflow: hidden;
+}
+.ccInfo .main p {
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  line-height: 24px;
+  max-height: 48px;
+  overflow: hidden;
+}
+.ccInfo .main h3 {
+  left: 540px;
+  bottom: 0px;
+  line-height: 1;
+  font-size: 28px;
+  color: #d32f24;
+  font-weight: normal;
+  position: absolute;
+}
+</style>

@@ -174,7 +174,7 @@ export default {
          this.teacherList = response.data.items
         })
     },
-    saveOrUpdate() {
+    addCourse() {
       course.addCourseInfo(this.courseInfo)
         .then(response => {
           this.$message({
@@ -183,6 +183,21 @@ export default {
           })
           this.$router.push({ path: '/course/chapter/' + response.data.courseId })
         })
+    },
+    saveOrUpdate() {
+      if (this.courseInfo.id) { // update
+        course.updateCourseInfo(this.courseInfo)
+          .then(response => {
+            this.$message({
+              type: 'success',
+              message: 'Successfully modified!'
+            })
+            this.$router.push({ path: '/course/chapter/' + this.courseId }) // updateCourseInfo won't return an id
+          })
+      } else { // insert
+        this.addCourse()
+      }
+      
     },
     getOneSubject() {
       subject.getSubjectList()

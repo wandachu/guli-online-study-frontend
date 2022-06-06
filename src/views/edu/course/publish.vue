@@ -19,16 +19,16 @@
   export default {
     data() {
       return {
+        courseId: '', // courseId
         saveBtnDisabled: false // 保存按钮是否禁用
       }
     },
     created() {
-      console.log('publish created')
+      this.courseId = this.$route.params.id
     },
     methods: {
       previous() {
-        console.log('previous')
-        this.$router.push({ path: '/course/chapter/1' })
+        this.$router.push({ path: '/course/chapter/' + this.courseId })
       },
       publish() {
         console.log('publish')

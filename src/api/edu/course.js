@@ -42,6 +42,14 @@ export default {
             url: '/eduservice/course/publishCourse/' + id,
             method: 'post'
         })
+    },
+
+    getListCourse(current, limit, courseQuery) {
+        return request({
+            url: '/eduservice/course/' + current + "/" + limit,
+            method: 'post',
+            data: courseQuery
+        })
     }
 
 }

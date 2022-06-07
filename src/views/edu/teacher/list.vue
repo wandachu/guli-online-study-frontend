@@ -54,7 +54,7 @@
             </template>
         </el-table-column>
 
-        <el-table-column prop="name" label="Name" width="80" />
+        <el-table-column prop="name" label="Name" width="120" />
 
         <el-table-column label="Level" width="80">
             <template slot-scope="scope">
@@ -138,7 +138,7 @@ export default {
                     .catch(error => {
                         console.log(error)
                     })
-            })
+            }).catch(() => {})
         }
     }
     

@@ -51,11 +51,11 @@
 
       <el-table-column label="Action" width="170" align="center">
         <template slot-scope="scope">
-        <router-link :to="'/course/info/' + this.courseId"> <!-- use router to go back to edit page -->
+        <router-link :to="'/course/info/' + scope.row.id"> <!-- use router to go back to edit page -->
             <el-button type="primary" size="mini" icon="el-icon-edit">Modify Basic Info</el-button>
         </router-link>
 
-        <router-link :to="'/course/chapter/' + this.courseId"> <!-- use router to go back to edit page -->
+        <router-link :to="'/course/chapter/' + scope.row.id"> <!-- use router to go back to edit page -->
             <el-button type="primary" size="mini" icon="el-icon-edit">Modify Chapters</el-button>
         </router-link>
 
@@ -93,7 +93,6 @@ export default {
   methods: {
     getList(page = 1) {
       this.page = page
-      console.log(this.courseQuery)
       course.getListCourse(this.page, this.limit, this.courseQuery)
           .then(response => {
             this.list = response.data.list
@@ -106,6 +105,25 @@ export default {
     resetData() {
       this.courseQuery = {}
       this.getList()
+    },
+    removeDataById(id) {
+      this.$confirm('This will permanently delete the course. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+          course.deleteCourse(id)
+          .then(response => {
+            this.$message({
+              type: 'success',
+              message: 'Delete completed'
+            })
+              this.getList()
+            })
+          .catch(error => {
+            console.log(error)
+          })
+        }).catch(() => {})
     }
   }
 }

@@ -50,7 +50,7 @@
           <el-input v-model="chapter.title"/>
         </el-form-item>
         <el-form-item label="Chapter Sort">
-          <el-input-number v-model="chapter.sort" :min="0" controlsposition="right"/>
+          <el-input-number v-model="chapter.sort" :min="0" controlsPosition="right"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -66,7 +66,7 @@
           <el-input v-model="video.title"/>
         </el-form-item>
         <el-form-item label="Sort">
-          <el-input-number v-model="video.sort" :min="0" controlsposition="right"/>
+          <el-input-number v-model="video.sort" :min="0" controlsPosition="right"/>
         </el-form-item>
         <el-form-item label="Free or Default">
           <el-radio-group v-model="video.isFree">
@@ -75,7 +75,25 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="Upload video">
-          <!-- TODO -->
+          <el-upload
+            :on-success="handleVodUploadSuccess"
+            :on-remove="handleVodRemove"
+            :before-remove="beforeVodRemove"
+            :on-exceed="handleUploadExceed"
+            :file-list="fileList"
+            :action="BASE_API + '/eduvod/video/uploadAliyunVideo'"
+            :limit="1"
+            class="upload-demo">
+            <el-button size="small" type="primary">Upload</el-button>
+            <el-tooltip placement="right-end">
+                <div slot="content">Supports maximum size of 1G,<br>
+                    formats including: 3GP, ASF, AVI, DAT, DV, <br>
+                    FLV, F4V, GIF, M2T, M4V, MJ2, MJPEG, MKV, <br>
+                    MOV, MP4, MPE, MPG, MPEG, MTS, OGG, QT, <br>
+                    RM, RMVB, SWF, TS, VOB, WMV, WEBM</div>
+                <i class="el-icon-question"/>
+            </el-tooltip>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -97,6 +115,8 @@ import video from '@/api/edu/video'
         dialogChapterFormVisible: false,
         dialogVideoFormVisible: false,
         saveVideoBtnDisabled: false,
+        BASE_API: process.env.BASE_API,
+        fileList: [],
         chapter: { // Chapter info
           title:'',
           sort: 0,
@@ -106,7 +126,8 @@ import video from '@/api/edu/video'
           title: '',
           sort: 0,
           isFree: 0, // default to be not chosen. 0 is not free. 1 is free
-          videoSourceId: ''
+          videoSourceId: '',
+          videoOriginalName: ''
         }
       }
     },
@@ -118,6 +139,19 @@ import video from '@/api/edu/video'
     },
     methods: {
       //===========================================Video=========================================
+      handleVodUploadSuccess(response, file, fileList) {
+        this.video.videoSourceId = response.data.videoId
+        this.video.videoOriginalName = file.name
+      },
+      handleVodRemove() { // called when click yes in the pop-up window. actually remove the video
+
+      },
+      beforeVodRemove() { // called when the x is clicked. used to pop up a confirming window
+
+      },
+      handleUploadExceed() {
+        this.$message.warning('Please remove the uploaded video before uploading new videos')
+      },
       openEditVideo(id) {
         this.dialogVideoFormVisible = true
         video.getVideo(id)

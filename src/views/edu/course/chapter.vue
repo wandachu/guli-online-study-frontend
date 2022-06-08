@@ -144,10 +144,19 @@ import video from '@/api/edu/video'
         this.video.videoOriginalName = file.name
       },
       handleVodRemove() { // called when click yes in the pop-up window. actually remove the video
-
+        video.removeAliyunVideo(this.video.videoSourceId)
+          .then(response => {
+            this.$message({
+              type: 'success',
+              message: 'Delete completed'
+            })
+            this.fileList = []
+            this.video.videoSourceId = ''
+            this.video.videoOriginalName = ''
+          })
       },
-      beforeVodRemove() { // called when the x is clicked. used to pop up a confirming window
-
+      beforeVodRemove(file, fileList) { // called when the x is clicked. used to pop up a confirming window
+        return this.$confirm(`Are you sure you want to delete '${file.name}'?`)
       },
       handleUploadExceed() {
         this.$message.warning('Please remove the uploaded video before uploading new videos')
@@ -169,8 +178,8 @@ import video from '@/api/edu/video'
             video.deleteVideo(id)
               .then(response => {
                 this.$message({
-                    type: 'success',
-                    message: 'Delete completed'
+                  type: 'success',
+                  message: 'Delete completed'
                 })
                 this.getChapterVideo()
               })
@@ -181,6 +190,7 @@ import video from '@/api/edu/video'
       },
       openVideo(chapterId) {
         this.dialogVideoFormVisible = true
+        this.fileList = []
         this.video.chapterId = chapterId
         this.video.courseId = this.courseId
         // Reset pop up window

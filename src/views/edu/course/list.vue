@@ -35,9 +35,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="title" label="Course" width="300" />
+      <el-table-column prop="title" label="Course" width="380" />
 
-      <el-table-column label="Status" width="90">
+      <el-table-column label="Status" width="150">
         <template slot-scope="scope">
         {{ scope.row.status==='Normal' ? 'Published' : 'Draft' }}
         </template>
@@ -45,11 +45,11 @@
 
       <el-table-column prop="lessonNum" label="Total Lessons" width="130"/>
 
-      <el-table-column prop="gmtCreate" label="Created Time" width="160"/>
+      <el-table-column prop="gmtCreate" label="Created Time" width="200"/>
 
-      <el-table-column prop="viewCount" label="Total Views" width="130" />
+      <el-table-column prop="viewCount" label="Total Views" width="150" />
 
-      <el-table-column label="Action" width="170" align="center">
+      <el-table-column label="Action" width="200" align="center">
         <template slot-scope="scope">
         <router-link :to="'/course/info/' + scope.row.id"> <!-- use router to go back to edit page -->
             <el-button type="primary" size="mini" icon="el-icon-edit">Modify Basic Info</el-button>
